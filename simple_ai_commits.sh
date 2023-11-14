@@ -3,11 +3,12 @@
 # ai generated commits
 VERBOSE=0
 NUMBER=5
-PRINTONLY=1
+OUT="commit"
 
 usage="--verbose for more info on what's going on
 --number number of prompts to generate
---print-only populate your next prompt with the git message instead of commiting directly
+--output=print populate your next prompt with the git message
+--output=commit instead will directly commit
 "
 
 # gather user arguments
@@ -15,15 +16,15 @@ for arg in "$@"; do
     case "$arg" in
         -v | --verbose)
             VERBOSE=1
-            shift 2
+            shift
             ;;
         -n | --number)
             NUMBER="$2"
             shift 2
             ;;
-        -p | --print-only)
-            PRINTONLY=1
-            shift 2
+        -o | --output)
+            OUT="$2"
+            shift
             ;;
         -h | --help)
             echo $usage
@@ -54,7 +55,7 @@ fix(authentication): add password regex pattern
 feat(storage): add new test cases
 perf(init): add caching to file loaders
 "
-suggestions=$(llm -s $system_prompt -m $diff | grep -v ^$ | sort)
+suggestions=$(llm -s "$system_prompt" "$diff" | grep -v ^$ | sort)
 
 # split one suggestion by line
 arr=()
@@ -74,13 +75,25 @@ break
 
 if [[ $VERBOSE == 1 ]]
 then
-    echo "You chose $choice"
+    echo "You chose '$choice'"
 fi
 
-if [[ $PRINTONLY == 1 ]]
+if [[ $OUT == "print" ]]
 then
+    if [[ $VERBOSE == 1 ]]
+    then
+        echo "Not committed but shown"
+    fi
     print -z "git commit -m '$choice'" || echo "git commit -m '$choice'"
-else
+elif [[ $OUT == "commit" ]]
+then
+    if [[ $VERBOSE == 1 ]]
+    then
+        echo "Commited"
+    fi
     git commit -m "$choice"
+else
+    echo "Invalid --output $OUT"
+    exit
 fi
 
