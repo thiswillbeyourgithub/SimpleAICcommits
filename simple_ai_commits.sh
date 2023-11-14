@@ -5,6 +5,11 @@ VERBOSE=0
 NUMBER=5
 PRINTONLY=1
 
+usage="--verbose for more info on what's going on
+--number number of prompts to generate
+--print-only populate your next prompt with the git message instead of commiting directly
+"
+
 # gather user arguments
 for arg in "$@"; do
     case "$arg" in
@@ -19,6 +24,10 @@ for arg in "$@"; do
         -p | --print-only)
             PRINTONLY=1
             shift 2
+            ;;
+        -h | --help)
+            echo $usage
+            return
             ;;
     esac
 done
