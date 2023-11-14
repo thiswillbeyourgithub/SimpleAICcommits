@@ -45,7 +45,7 @@ fix(authentication): add password regex pattern
 feat(storage): add new test cases
 perf(init): add caching to file loaders
 "
-suggestions=$(echo $diff  | llm -s $system_prompt | grep -v ^$ | sort)
+suggestions=$(llm -s $system_prompt -m $diff | grep -v ^$ | sort)
 
 # split one suggestion by line
 arr=()
