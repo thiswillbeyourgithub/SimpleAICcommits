@@ -5,12 +5,14 @@ VERBOSE=0
 NUMBER=5
 OUT="commit"
 MODEL="gpt-3.5-turbo-1106"
+UI="select"
 
 usage="--verbose for more info on what's going on
 --number number of prompts to generate
 --output=print populate your next prompt with the git message
 --output=commit instead will directly commit
 --model default to gpt-3.5-turbo-1106
+--UI default to 'select', can be 'dialog'
 "
 
 # gather user arguments
@@ -30,6 +32,10 @@ for arg in "$@"; do
             ;;
         -m | --model)
             MODEL="$2"
+            shift
+            ;;
+        -u | --ui)
+            UI="$2"
             shift
             ;;
         -h | --help)
@@ -73,11 +79,17 @@ while IFS= read -r line; do
     fi
 done <<< "$suggestions"
 
-# select
-select choice in $arr
-break
-# dialog
-# choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
+if [[ $UI == "select" ]]
+then
+    select choice in $arr
+    break
+elif [[ $UI == "dialog" ]]
+then
+    choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
+else
+    echo "Invalid --ui $UI"
+    return
+fi
 
 if [[ $VERBOSE == 1 ]]
 then
