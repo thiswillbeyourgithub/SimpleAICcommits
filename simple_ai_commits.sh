@@ -6,6 +6,7 @@ NUMBER=5
 OUT="commit"
 MODEL="gpt-3.5-turbo-1106"
 UI="select"
+CONTEXT=""
 
 usage="--verbose for more info on what's going on
 --number number of prompts to generate
@@ -13,6 +14,7 @@ usage="--verbose for more info on what's going on
 --output=commit instead will directly commit
 --model default to gpt-3.5-turbo-1106
 --UI default to 'select', can be 'dialog'
+--context any additional context you want to give to the llm
 "
 
 # gather user arguments
@@ -38,6 +40,10 @@ for arg in "$@"; do
             UI="$2"
             shift
             ;;
+        -c | --context)
+            CONTEXT="$2"
+            shift
+            ;;
         -h | --help)
             echo $usage
             return
@@ -59,11 +65,16 @@ if [[ $VERBOSE == 1 ]]
 then
     echo "diff $diff"
 fi
+if [[ $CONTEXT != "" ]]
+then
+    diff="USER: The high level context of this change is \"$CONTEXT\"\n\n$diff"
+    CONTEXT="\nIf the user adds context to the diff, take it into account."
+fi
 
 # get ai suggested commit message
 system_prompt="You are given the output of 'git diff --cached'. You must reply $NUMBER commit messages suggestions that follow convention commits.
 Your message format should be: '<type>(scope): <description>'
-Do not forget newline, they will be used to parse your suggestions.
+Do not forget newline, they will be used to parse your suggestions.$CONTEXT
 
 Examples:
 fix(authentication): add password regex pattern
