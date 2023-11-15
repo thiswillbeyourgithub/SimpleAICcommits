@@ -51,7 +51,10 @@ if [[ -z $diff ]]
 then
     echo "Empty diff: $diff"
     return
+else
+    diff="DIFF:\n'''\n$diff\n'''"
 fi
+
 if [[ $VERBOSE == 1 ]]
 then
     echo "diff $diff"
