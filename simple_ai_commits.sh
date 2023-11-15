@@ -89,7 +89,7 @@ perf(init): add caching to file loaders
 log "System prompt: $system_prompt"
 
 log "Asking LLM..."
-suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" | grep -v ^$ | sort)
+suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0 | grep -v ^$ | sort)
 log "Done!"
 
 # split one suggestion by line
