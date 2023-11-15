@@ -1,5 +1,13 @@
 #!/usr/bin/zsh
 
+
+function log() {
+    if [[ $VERBOSE == 1 ]]
+    then
+        echo "$1"
+    fi
+}
+
 # ai generated commits
 VERBOSE=0
 NUMBER=5
@@ -60,11 +68,8 @@ then
 else
     diff="DIFF:\n'''\n$diff\n'''"
 fi
+log "diff $diff"
 
-if [[ $VERBOSE == 1 ]]
-then
-    echo "diff $diff"
-fi
 if [[ $CONTEXT != "" ]]
 then
     diff="USER: The high level context of this change is \"$CONTEXT\"\n\n$diff"
@@ -81,18 +86,20 @@ fix(authentication): add password regex pattern
 feat(storage): add new test cases
 perf(init): add caching to file loaders
 "
+log "System prompt: $system_prompt"
+
+log "Asking LLM..."
 suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" | grep -v ^$ | sort)
+log "Done!"
 
 # split one suggestion by line
 arr=()
 while IFS= read -r line; do
     arr+=("$line")
-    if [[ $VERBOSE == 1 ]]
-        then
-            echo "Suggestion: $line"
-    fi
+    log "Suggestion: $line"
 done <<< "$suggestions"
 
+# UI
 if [[ $UI == "select" ]]
 then
     select choice in $arr
@@ -104,25 +111,17 @@ else
     echo "Invalid --ui $UI"
     return
 fi
+log "You chose '$choice'"
 
-if [[ $VERBOSE == 1 ]]
-then
-    echo "You chose '$choice'"
-fi
 
+# end
 if [[ $OUT == "print" ]]
 then
-    if [[ $VERBOSE == 1 ]]
-    then
-        echo "Not committed but shown"
-    fi
+    log "Not committed but shown"
     print -z "git commit -m '$choice'" || echo "git commit -m '$choice'"
 elif [[ $OUT == "commit" ]]
 then
-    if [[ $VERBOSE == 1 ]]
-    then
-        echo "Commited"
-    fi
+    log "Making commit"
     git commit -m "$choice"
 else
     echo "Invalid --output $OUT"
