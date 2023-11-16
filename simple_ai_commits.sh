@@ -89,7 +89,10 @@ perf(init): add caching to file loaders
 log "System prompt: $system_prompt"
 
 log "Asking LLM..."
-suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0 | grep -v ^$ | sort)
+# via openai (faster)
+suggestions=$(openai api chat_completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0 | grep -v ^$ | sort)
+# via llm (slower but very extensible)
+#suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0 | grep -v ^$ | sort)
 log "Done!"
 
 # split one suggestion by line
