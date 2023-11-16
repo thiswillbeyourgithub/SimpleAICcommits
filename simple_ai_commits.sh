@@ -90,7 +90,10 @@ log "System prompt: $system_prompt"
 
 log "Asking LLM..."
 # via openai (faster)
+# version 0.28.1
 suggestions=$(openai api chat_completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0 | grep -v ^$ | sort)
+# version >=1.2.3
+# suggestions=$(openai api chat.completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0 | grep -v ^$ | sort)
 # via llm (slower but very extensible)
 #suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0 | grep -v ^$ | sort)
 log "Done!"
