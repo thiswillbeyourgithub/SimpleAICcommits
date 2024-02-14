@@ -12,7 +12,8 @@ function log() {
 VERBOSE=0
 NUMBER=5
 OUT="commit"
-MODEL="gpt-3.5-turbo-1106"
+MODEL="gpt-3.5-turbo-2501"
+# MODEL="gpt-4-2501-preview"
 UI="select"
 EXTRA=""
 
@@ -20,7 +21,7 @@ usage="--verbose for more info on what's going on
 --number number of prompts to generate
 --output=print populate your next prompt with the git message
 --output=commit instead will directly commit
---model default to gpt-3.5-turbo-1106
+--model default to gpt-3.5-turbo-2501
 --UI default to 'select', can be 'dialog'
 --extra any additional info you want to give to the llm
 "
