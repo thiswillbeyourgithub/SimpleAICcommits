@@ -16,12 +16,15 @@ MODEL="gpt-4o-mini"
 UI="fzf"
 EXTRA=""
 PATCH="1"
+DO_RESET="1"
 PREV_COMMIT="1"
 VERSION="2.0"
 
 usage="
 
 --patch=1                   1 to use 'git add --patch' to get the diff, 0 to get the diff directly
+
+--do-reset=1                1 to do a 'git reset' at the start, allowing you to restart 'git add --patch' for example. 0 to disable.
 
 --number=10                 number of suggestions to ask for
 
@@ -84,6 +87,9 @@ for arg in "$@"; do
         -p | --patch)
             PATCH="${arg#*=}"
             ;;
+        --do-reset)
+            DO_RESET="${arg#*=}"
+            ;;
         --include_previous)
             PREV_COMMIT="${arg#*=}"
             ;;
@@ -105,6 +111,12 @@ then
     prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
 else
     prev_commits=""
+fi
+
+if [[ "$DO_RESET" != "0" ]]
+then
+    echo "git reset"
+    git reset
 fi
 
 # get the git diff
