@@ -24,7 +24,7 @@ usage="
 
 --number=10                 number of suggestions to ask for
 
---include_previous=1        1 to include or not the name of the last 5 previous commits for context. 0 to disable. Default 1
+--include_previous=1        1 to include or not the name of the last 10 previous commits for context. 0 to disable. Default 1
 
 --output='commit'           'print' to populate your next prompt with the git message or 'commit' to commit directly.
 
@@ -95,7 +95,7 @@ done
 # get the previous git commits
 if [[ "$PREV_COMMIT" != "0" ]]
 then
-    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 5 --no-color --pretty=format:\"%s\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
+    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
 else
     prev_commits=""
 fi
