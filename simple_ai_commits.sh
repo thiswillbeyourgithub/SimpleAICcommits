@@ -160,6 +160,12 @@ else
     echo "Invalid --ui $UI"
     exit 1
 fi
+if [[ -z "$choice" ]]
+then
+    echo "Invalid choice: '$choice'"
+    exit 1
+fi
+
 log "You chose '$choice'"
 
 
