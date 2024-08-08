@@ -18,7 +18,7 @@ EXTRA=""
 PATCH="1"
 DO_RESET="1"
 PREV_COMMIT="1"
-VERSION="2.0"
+VERSION="2.1"
 
 usage="
 
