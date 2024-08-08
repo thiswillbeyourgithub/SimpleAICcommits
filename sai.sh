@@ -13,7 +13,7 @@ VERBOSE=0
 NUMBER=5
 OUT="commit"
 MODEL="gpt-4o-mini"
-UI="select"
+UI="fzf"
 EXTRA=""
 PATCH="1"
 PREV_COMMIT="0"
@@ -31,7 +31,7 @@ usage="--verbose for more info on what's going on
 
 --model default to gpt-4o-mini
 
---UI default to 'select', can be 'dialog'
+--UI 'fzf'     can be 'fzf', 'select' or 'dialog'
 
 --extra any additional info you want to give to the llm
 "
@@ -175,6 +175,9 @@ if [[ $UI == "select" ]]
 then
     select choice in $arr
     break
+elif [[ $UI == "fzf" ]]
+then
+    choice=$(echo $suggestions | fzf --height=50% --layout=reverse --border)
 elif [[ $UI == "dialog" ]]
 then
     choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
