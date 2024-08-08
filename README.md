@@ -8,7 +8,7 @@ Simple shell script to use an LLM to write your commit messages
 - Option to include previous commit messages for context
 - Flexible output modes: print or directly commit
 - Selectable AI models (e.g., GPT-3.5-turbo, GPT-4)
-- User interface options: select or dialog
+- User interface options: fzf, select or dialog
 - Ability to add extra context to AI prompt
 - Displays AI's reasoning process
 
