@@ -10,7 +10,7 @@ function log() {
 
 # ai generated commits
 VERBOSE=0
-NUMBER=5
+NUMBER=10
 OUT="commit"
 MODEL="gpt-4o-mini"
 UI="fzf"
