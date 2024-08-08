@@ -54,45 +54,37 @@ perf(init): add caching to file loaders
 
 # gather user arguments
 for arg in "$@"; do
-    case "$arg" in
+    case "${arg%%=*}" in
         -v | --verbose)
             VERBOSE=1
-            shift
             ;;
         -n | --number)
-            NUMBER="$2"
-            shift 2
+            NUMBER="${arg#*=}"
             ;;
         -o | --output)
-            OUT="$2"
-            shift
+            OUT="${arg#*=}"
             ;;
         -m | --model)
-            MODEL="$2"
-            shift
+            MODEL="${arg#*=}"
             ;;
         -u | --ui)
-            UI="$2"
-            shift
+            UI="${arg#*=}"
             ;;
         -e | --extra)
-            EXTRA="$2"
-            shift
+            EXTRA="${arg#*=}"
             ;;
         -p | --patch)
-            PATCH="$2"
-            shift
+            PATCH="${arg#*=}"
             ;;
         --include_previous)
-            PREV_COMMIT="$2"
-            shift
+            PREV_COMMIT="${arg#*=}"
             ;;
         -h | --help)
-            echo $usage
+            echo "$usage"
             exit 1
             ;;
         *)
-            echo "Error: Unexpected argument '$arg'"
+            echo "Error: Unexpected argument '${arg%%=*}'"
             echo "$usage"
             exit 1
             ;;
