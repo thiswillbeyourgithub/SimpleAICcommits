@@ -16,10 +16,12 @@ MODEL="gpt-4o-mini"
 UI="select"
 EXTRA=""
 PATCH="1"
+PREV_COMMIT="0"
 
 usage="--verbose for more info on what's going on
 --patch=0 or 1 to select the diff using 'git add --patch'
 --number number of prompts to generate
+--include_previous=0 or 1   to include or not the name of the last 5 previous commits for context. Default 1
 --output=print populate your next prompt with the git message
 --output=commit instead will directly commit
 --model default to gpt-3.5-turbo-2501
@@ -74,6 +76,10 @@ for arg in "$@"; do
             PATCH="$2"
             shift
             ;;
+        --include_previous)
+            PREV_COMMIT="$2"
+            shift
+            ;;
         -h | --help)
             echo $usage
             exit 1
@@ -81,6 +87,13 @@ for arg in "$@"; do
     esac
 done
 
+# get the previous git commits
+if [[ "$PREV_COMMIT" != "0" ]]
+then
+    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 5 --no-color --pretty=format:\"%s\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
+else
+    prev_commits=""
+fi
 
 # get the git diff
 diff_cached=$(git --no-pager diff --cached --no-color --minimal)
@@ -118,15 +131,17 @@ then
     EXTRA="\nADDITIONAL INFORMATION:\n```\n$EXTRA\n```"
 fi
 
+prompt="$prev_commits$diff"
+
 # get ai suggested commit message
 echo "Asking $model..."
 # via openai (faster)
 # version 0.28.1
-# answer=$(openai api chat_completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0)
+# answer=$(openai api chat_completions.create -g system "$system_prompt" -g user "$prompt" -m $MODEL -t 0)
 # version >=1.2.3
-# answer=$(openai api chat.completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0)
+# answer=$(openai api chat.completions.create -g system "$system_prompt" -g user "$prompt" -m $MODEL -t 0)
 # via llm (slower but very extensible)
-answer=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0)
+answer=$(llm -m $MODEL -s "$system_prompt" "$prompt" -o temperature 0)
 echo "API call finished"
 
 thinking=$(awk '
