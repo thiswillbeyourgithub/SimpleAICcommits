@@ -69,7 +69,7 @@ for arg in "$@"; do
             VERBOSE=1
             ;;
         --version)
-            echo "Version: $VERSION"
+            echo "$VERSION"
             exit 0
             ;;
         -n | --number)
