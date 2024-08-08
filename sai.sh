@@ -19,13 +19,20 @@ PATCH="1"
 PREV_COMMIT="0"
 
 usage="--verbose for more info on what's going on
+
 --patch=0 or 1 to select the diff using 'git add --patch'
+
 --number number of prompts to generate
+
 --include_previous=0 or 1   to include or not the name of the last 5 previous commits for context. Default 1
+
 --output=print populate your next prompt with the git message
 --output=commit instead will directly commit
---model default to gpt-3.5-turbo-2501
+
+--model default to gpt-4o-mini
+
 --UI default to 'select', can be 'dialog'
+
 --extra any additional info you want to give to the llm
 "
 
