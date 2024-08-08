@@ -60,7 +60,7 @@ for arg in "$@"; do
             ;;
         -h | --help)
             echo $usage
-            return
+            exit 1
             ;;
     esac
 done
@@ -126,7 +126,7 @@ then
     choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
 else
     echo "Invalid --ui $UI"
-    return
+    exit 1
 fi
 log "You chose '$choice'"
 
