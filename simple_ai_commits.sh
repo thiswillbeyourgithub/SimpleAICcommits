@@ -12,8 +12,7 @@ function log() {
 VERBOSE=0
 NUMBER=5
 OUT="commit"
-MODEL="gpt-3.5-turbo-2501"
-# MODEL="gpt-4-2501-preview"
+MODEL="gpt-4o-mini"
 UI="select"
 EXTRA=""
 
