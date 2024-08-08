@@ -186,6 +186,8 @@ answer=$(awk '
 ' <<< "$answer" | awk NF)
 suggestions=$answer
 
+suggestions=$(echo $suggestions | sort)
+
 # split one suggestion by line
 arr=()
 while IFS= read -r line; do
