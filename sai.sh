@@ -198,8 +198,17 @@ then
         --layout=reverse \
         --border \
         --preview 'echo {}' \
-        --preview-window down:wrap
+        --preview-window down:wrap \
+        --bind 'e:execute(echo EDIT{})' \
+        --expect 'e'
     )
+    key=$(echo "$choice" | head -1)
+    choice=$(echo "$choice" | tail -1)
+    if [[ $key == "e" ]]
+    then
+        OUT="print"
+        choice=${choice#EDIT}
+    fi
 elif [[ $UI == "dialog" ]]
 then
     choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
