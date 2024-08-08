@@ -18,6 +18,7 @@ EXTRA=""
 PATCH="1"
 DO_RESET="1"
 PREV_COMMIT="1"
+PREFIX="SAIC: "
 VERSION="2.1"
 
 usage="
@@ -27,6 +28,8 @@ usage="
 --do-reset=1                1 to do a 'git reset' at the start, allowing you to restart 'git add --patch' for example. 0 to disable.
 
 --number=10                 number of suggestions to ask for
+
+--prefix='SAIC: '            prefix of the commit, helps SAIC knows which previous commit it did.
 
 --include_previous=1        1 to include or not the name of the last 10 previous commits for context. 0 to disable. Default 1
 
@@ -43,7 +46,7 @@ usage="
 --verbose                   for more info on what's going on
 "
 
-system_prompt="You are my best developper. Your task is: given an output of 'git diff', you must reply $NUMBER suggestions of commit messages that follow the conventionnal commits format.
+system_prompt="You are SAIC (Simple AI Commit), my best developper. Your task is: given an output of 'git diff', you must reply $NUMBER suggestions of commit messages that follow the conventionnal commits format.
 Your message format should be: '<type>(scope): <description>'
 BEFORE answering, you can use a <thinking> tag for yourself, THEN take a deep breath, THEN finally answer wrapping all your suggestions in a single <answer> tag that ends with </answer>.
 Do not forget to separate each suggestion by a newline, they will be used to parse your suggestions.$EXTRA
@@ -80,6 +83,9 @@ for arg in "$@"; do
             ;;
         -u | --ui)
             UI="${arg#*=}"
+            ;;
+        --prefix)
+            PREFIX="${arg#*=}"
             ;;
         -e | --extra)
             EXTRA="${arg#*=}"
@@ -224,6 +230,7 @@ fi
 
 log "You chose '$choice'"
 
+choice=$PREFIX$choice
 
 # end
 if [[ $OUT == "print" ]]
