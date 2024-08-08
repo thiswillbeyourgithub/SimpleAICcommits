@@ -65,21 +65,36 @@ for arg in "$@"; do
     esac
 done
 
+
+# get the git diff
+diff_cached=$(git --no-pager diff --cached --no-color --minimal)
+
 if [[ "$PATCH" == "1" ]]
 then
-    git add --patch
+    if [[ -z "$diff_cached" ]]
+    then
+        git add --patch
+        diff_cached=$(git --no-pager diff --cached --no-color --minimal)
+    else
+        echo "Not doing 'git add --patch' because there's already a diff --cached"
+    fi
 fi
 
-# get the diff
-diff=$(git --no-pager diff --cached --no-color --minimal)
-if [[ -z $diff ]]
+if [[ -z "$diff_cached" ]]
 then
-    echo "Empty diff: $diff"
-    return
+    diff_noncached=$(git --no-pager diff --no-color --minimal)
+    diff=$diff_cached
 else
-    diff="DIFF:\n'''\n$diff\n'''"
+    diff=$diff_cached
 fi
-log "diff $diff"
+if [[ -z "$diff" ]]
+then
+    echo "Empty git diff (--cached or not)"
+    exit 1
+else
+    diff="GIT DIFF:\n```\n$diff\n```\n\n"
+    log "$diff"
+fi
 
 if [[ $EXTRA != "" ]]
 then
