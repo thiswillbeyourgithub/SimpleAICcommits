@@ -91,6 +91,11 @@ for arg in "$@"; do
             echo $usage
             exit 1
             ;;
+        *)
+            echo "Error: Unexpected argument '$arg'"
+            echo "$usage"
+            exit 1
+            ;;
     esac
 done
 
