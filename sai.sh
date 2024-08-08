@@ -16,24 +16,25 @@ MODEL="gpt-4o-mini"
 UI="fzf"
 EXTRA=""
 PATCH="1"
-PREV_COMMIT="0"
+PREV_COMMIT="1"
 
-usage="--verbose for more info on what's going on
+usage="
 
---patch=0 or 1 to select the diff using 'git add --patch'
+--patch=1                   1 to use 'git add --patch' to get the diff, 0 to get the diff directly
 
---number number of prompts to generate
+--number=10                 number of suggestions to ask for
 
---include_previous=0 or 1   to include or not the name of the last 5 previous commits for context. Default 1
+--include_previous=1        1 to include or not the name of the last 5 previous commits for context. 0 to disable. Default 1
 
---output=print populate your next prompt with the git message
---output=commit instead will directly commit
+--output='commit'           'print' to populate your next prompt with the git message or 'commit' to commit directly.
 
---model default to gpt-4o-mini
+--model='gpt-4o-mini'
 
---UI 'fzf'     can be 'fzf', 'select' or 'dialog'
+--UI='fzf'                  can be 'fzf', 'select' or 'dialog'
 
---extra any additional info you want to give to the llm
+--extra                     any additional context you want to give to the llm
+
+--verbose                   for more info on what's going on
 "
 
 system_prompt="You are my best developper. Your task is: given an output of 'git diff', you must reply $NUMBER suggestions of commit messages that follow the conventionnal commits format.
