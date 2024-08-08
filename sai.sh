@@ -182,7 +182,12 @@ then
     break
 elif [[ $UI == "fzf" ]]
 then
-    choice=$(echo $suggestions | fzf --layout=reverse --border)
+    choice=$(echo $suggestions | fzf \
+        --layout=reverse \
+        --border \
+        --preview 'echo {} | fold -s -w $(($COLUMNS/2))' \
+        --preview-window down:wrap
+    )
 elif [[ $UI == "dialog" ]]
 then
     choice=$(dialog --stdout --no-items --menu "Choose git commit" 100 100 5 $arr)
