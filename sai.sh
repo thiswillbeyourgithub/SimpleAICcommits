@@ -185,7 +185,7 @@ then
     choice=$(echo $suggestions | fzf \
         --layout=reverse \
         --border \
-        --preview 'echo {} | fold -s -w $(($COLUMNS/2))' \
+        --preview 'echo {}' \
         --preview-window down:wrap
     )
 elif [[ $UI == "dialog" ]]
