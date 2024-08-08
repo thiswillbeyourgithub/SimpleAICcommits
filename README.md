@@ -2,9 +2,9 @@
 Dead simple zsh script to use an LLM to write your commit messages
 
 # Features
-* Gets your diff either using `git add --patch` or directly from your `--staged` diff
-* Conventional commit format
-* Specify a prefix to the commit message to identify the commits made using saic.sh
+- Gets your diff either using `git add --patch` or directly from your `--staged` diff
+- Conventional commit format
+- Specify a prefix to the commit message to identify the commits made using saic.sh
 - Customizable number of commit message suggestions
 - Option to include previous commit messages for context (this makes the LLM adapt to your habits!)
 - Flexible output modes: print or directly commit
