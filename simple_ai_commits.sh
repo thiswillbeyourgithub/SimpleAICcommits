@@ -27,6 +27,22 @@ usage="--verbose for more info on what's going on
 --extra any additional info you want to give to the llm
 "
 
+system_prompt="You are my best developper. Your task is: given an output of 'git diff', you must reply $NUMBER suggestions of commit messages that follow the conventionnal commits format.
+Your message format should be: '<type>(scope): <description>'
+BEFORE answering, you can use a <thinking> tag for yourself, THEN take a deep breath, THEN finally answer wrapping all your suggestions in a single <answer> tag that ends with </answer>.
+Do not forget to separate each suggestion by a newline, they will be used to parse your suggestions.$EXTRA
+
+Examples of appropriate suggestion format:
+<thinking>
+This is an example of your reasonning.
+</thinking>
+<answer>
+fix(authentication): add password regex pattern
+feat(storage): add new test cases
+perf(init): add caching to file loaders
+</answer>
+"
+
 # gather user arguments
 for arg in "$@"; do
     case "$arg" in
@@ -92,37 +108,38 @@ then
     echo "Empty git diff (--cached or not)"
     exit 1
 else
-    diff="GIT DIFF:\n```\n$diff\n```\n\n"
+    diff="## BEGINNING OF GIT DIFF ##\n$diff\n## END OF GIT DIFF ##\n\n"
     log "$diff"
 fi
 
-if [[ $EXTRA != "" ]]
+
+if [[ "$EXTRA" != "" ]]
 then
-    diff="EXTRA USER INFORMATION: \"$EXTRA\"\n\n$diff"
-    EXTRA="\nTake into account any extra information given by the user."
+    EXTRA="\nADDITIONAL INFORMATION:\n```\n$EXTRA\n```"
 fi
 
 # get ai suggested commit message
-system_prompt="You are given the output of 'git diff --cached'. You must reply $NUMBER commit messages suggestions that follow convention commits.
-Your message format should be: '<type>(scope): <description>'
-Do not forget newline, they will be used to parse your suggestions.$EXTRA
-
-Examples:
-fix(authentication): add password regex pattern
-feat(storage): add new test cases
-perf(init): add caching to file loaders
-"
-log "System prompt: $system_prompt"
-
-log "Asking LLM..."
+echo "Asking $model..."
 # via openai (faster)
 # version 0.28.1
-suggestions=$(openai api chat_completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0 | grep -v ^$ | sort)
+# answer=$(openai api chat_completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0)
 # version >=1.2.3
-# suggestions=$(openai api chat.completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0 | grep -v ^$ | sort)
+# answer=$(openai api chat.completions.create -g system "$system_prompt" -g user "$diff" -m $MODEL -t 0)
 # via llm (slower but very extensible)
-#suggestions=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0 | grep -v ^$ | sort)
-log "Done!"
+answer=$(llm -m $MODEL -s "$system_prompt" "$diff" -o temperature 0)
+echo "API call finished"
+
+thinking=$(awk '
+    BEGIN { RS="</thinking>"; FS="<thinking>" }
+    NF>1 { gsub(/^[ \\t]*\\n/, "", $2); gsub(/\\n[ \\t]*$/, "", $2); print $2 }
+' <<< "$answer" | awk NF)
+echo "\n\n## Reasonning of the LLM ##:\n$thinking\n\n"
+
+answer=$(awk '
+    BEGIN { RS="</answer>"; FS="<answer>" }
+    NF>1 { gsub(/^[ \\t]*\\n/, "", $2); gsub(/\\n[ \\t]*$/, "", $2); print $2 }
+' <<< "$answer" | awk NF)
+suggestions=$answer
 
 # split one suggestion by line
 arr=()
