@@ -17,6 +17,7 @@ UI="fzf"
 EXTRA=""
 PATCH="1"
 PREV_COMMIT="1"
+VERSION="2.0"
 
 usage="
 
@@ -33,6 +34,8 @@ usage="
 --UI='fzf'                  can be 'fzf', 'select' or 'dialog'
 
 --extra                     any additional context you want to give to the llm
+
+--version                   display version number
 
 --verbose                   for more info on what's going on
 "
@@ -58,6 +61,10 @@ for arg in "$@"; do
     case "${arg%%=*}" in
         -v | --verbose)
             VERBOSE=1
+            ;;
+        --version)
+            echo "Version: $VERSION"
+            exit 0
             ;;
         -n | --number)
             NUMBER="${arg#*=}"
