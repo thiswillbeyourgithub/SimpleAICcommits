@@ -15,8 +15,10 @@ OUT="commit"
 MODEL="gpt-4o-mini"
 UI="select"
 EXTRA=""
+PATCH="1"
 
 usage="--verbose for more info on what's going on
+--patch=0 or 1 to select the diff using 'git add --patch'
 --number number of prompts to generate
 --output=print populate your next prompt with the git message
 --output=commit instead will directly commit
@@ -52,12 +54,21 @@ for arg in "$@"; do
             EXTRA="$2"
             shift
             ;;
+        -p | --patch)
+            PATCH="$2"
+            shift
+            ;;
         -h | --help)
             echo $usage
             return
             ;;
     esac
 done
+
+if [[ "$PATCH" == "1" ]]
+then
+    git add --patch
+fi
 
 # get the diff
 diff=$(git --no-pager diff --cached --no-color --minimal)
