@@ -8,7 +8,7 @@ function log() {
     fi
 }
 
-# ai generated commits
+# default parameter value
 VERBOSE=0
 NUMBER=10
 OUT="commit"
@@ -20,6 +20,9 @@ DO_RESET="1"
 PREV_COMMIT="1"
 PREFIX="SAIC: "
 VERSION="2.2"
+
+# hardcoded value
+MAX_STRING_LENGTH=100000
 
 usage="
 
@@ -162,6 +165,15 @@ then
 fi
 
 prompt="$prev_commits$diff"
+
+lengthp=${#prompt}
+lengths=${#system_prompt}
+length=$lengthp+$lengths
+if [[ $length -gt $MAX_STRING_LENGTH ]]
+then
+    echo "Prompt we were about to send to the LLM is suspiciously large, it's number of character is $length which is above $MAX_STRING_LENGTH"
+    exit 1
+fi
 
 # get ai suggested commit message
 echo "Asking $model..."

@@ -12,6 +12,7 @@ Dead simple zsh script to use an LLM to write your commit messages
 - User interface options: fzf, select or dialog
 - Ability to add extra context to AI prompt
 - Displays AI's reasoning process
+- Failsafe: automatically crash if has more than 100_000 characters
 
 ## How to
 1. `git clone https://github.com/thiswillbeyourgithub/SimpleAICcommits`.
