@@ -231,7 +231,7 @@ thinking=$(awk '
     BEGIN { RS="</thinking>"; FS="<thinking>" }
     NF>1 { gsub(/^[ \\t]*\\n/, "", $2); gsub(/\\n[ \\t]*$/, "", $2); print $2 }
 ' <<< "$answer" | awk NF)
-echo "\n\n## Reasonning of $model ##:\n$thinking\n\n"
+echo "\n\n## Reasonning of $MODEL ##:\n$thinking\n\n"
 
 answer=$(awk '
     BEGIN { RS="</answer>"; FS="<answer>" }
