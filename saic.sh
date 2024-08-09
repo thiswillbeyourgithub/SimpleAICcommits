@@ -88,6 +88,11 @@ for arg in "$@"; do
             ;;
         -o | --output)
             OUT="${arg#*=}"
+            if [[ "$OUT" != "commit" && "$OUT" != "print" ]]
+            then
+                echo "Invalid --output value (must be commit or print)"
+                exit 1
+            fi
             ;;
         --backend)
             BACKEND="${arg#*=}"
