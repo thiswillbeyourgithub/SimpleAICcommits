@@ -80,6 +80,11 @@ for arg in "$@"; do
             ;;
         -n | --number)
             NUMBER="${arg#*=}"
+            if [[ $NUMBER -gt 0 ]]
+            then
+                echo "Invalid --number value (must be a positive int)"
+                exit 1
+            fi
             ;;
         -o | --output)
             OUT="${arg#*=}"
@@ -88,7 +93,7 @@ for arg in "$@"; do
             BACKEND="${arg#*=}"
             if [[ "$BACKEND" != "openai" && "$BACKEND" != "llm" ]]
             then
-                echo "Invalid backend value"
+                echo "Invalid --backend value (must be openai or llm)"
                 exit 1
             fi
             ;;
@@ -97,6 +102,11 @@ for arg in "$@"; do
             ;;
         -u | --ui)
             UI="${arg#*=}"
+            if [[ "$UI" != "fzf" && "$UI" != "dialog" && "$UI" != "select" ]]
+            then
+                echo "Invalid --ui value (must be fzf, dilog or select)"
+                exit 1
+            fi
             ;;
         --prefix)
             PREFIX="${arg#*=}"
@@ -106,12 +116,27 @@ for arg in "$@"; do
             ;;
         -p | --patch)
             PATCH="${arg#*=}"
+            if [[ "$PATCH" != "0" && "$PATCH" != "1" ]]
+            then
+                echo "Invalid --patch value (must be 0 or 1)"
+                exit 1
+            fi
             ;;
         --do-reset)
             DO_RESET="${arg#*=}"
+            if [[ "$DO_RESET" != "0" && "$DO_RESET" != "1" ]]
+            then
+                echo "Invalid --do-reset value (must be 0 or 1)"
+                exit 1
+            fi
             ;;
         --include_previous)
             PREV_COMMIT="${arg#*=}"
+            if [[ "$PREV_COMMIT" != "0" && "$PREV_COMMIT" != "1" ]]
+            then
+                echo "Invalid --prev-commit value (must be 0 or 1)"
+                exit 1
+            fi
             ;;
         -h | --help)
             echo "$usage"
