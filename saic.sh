@@ -291,11 +291,15 @@ choice=$PREFIX$choice
 if [[ $OUT == "print" ]]
 then
     log "Not committed but shown"
-    print -z "git commit -m '$choice'" || echo "git commit -m '$choice'"
+    BUFFER="git commit -m '$choice'"
+    vared -c BUFFER
+    eval $BUFFER
+
 elif [[ $OUT == "commit" ]]
 then
     log "Making commit"
     git commit -m "$choice"
+
 else
     echo "Invalid --output $OUT"
     exit
