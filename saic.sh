@@ -20,6 +20,7 @@ DO_RESET="1"
 PREV_COMMIT="1"
 PREFIX="SAIC: "
 VERSION="2.2"
+BACKEND="openai"
 
 # hardcoded value
 MAX_STRING_LENGTH=100000
@@ -39,6 +40,8 @@ usage="
 --output='commit'           'print' to populate your next prompt with the git message or 'commit' to commit directly.
 
 --model='gpt-4o-mini'
+
+--backend='openai'          either 'openai' (faster) or 'llm' (more extensible, supports any provider)
 
 --UI='fzf'                  can be 'fzf', 'select' or 'dialog'
 
@@ -80,6 +83,14 @@ for arg in "$@"; do
             ;;
         -o | --output)
             OUT="${arg#*=}"
+            ;;
+        --backend)
+            BACKEND="${arg#*=}"
+            if [[ "$BACKEND" != "openai" && "$BACKEND" != "llm" ]]
+            then
+                echo "Invalid backend value"
+                exit 1
+            fi
             ;;
         -m | --model)
             MODEL="${arg#*=}"
@@ -176,14 +187,14 @@ then
 fi
 
 # get ai suggested commit message
-echo "Asking $model..."
-# via openai (faster)
-# version 0.28.1
-# answer=$(openai api chat_completions.create -g system "$system_prompt" -g user "$prompt" -m $MODEL -t 0)
-# version >=1.2.3
-# answer=$(openai api chat.completions.create -g system "$system_prompt" -g user "$prompt" -m $MODEL -t 0)
-# via llm (slower but very extensible)
-answer=$(llm -m $MODEL -s "$system_prompt" "$prompt" -o temperature 0)
+echo "Asking $MODEL via $BACKEND..."
+if [[ "$BACKEND" == "openai" ]]
+then
+    answer=$(openai api chat.completions.create -g system "$system_prompt" -g user "$prompt" -m $MODEL -t 0)
+elif [[ "$BACKEND" == "llm" ]]
+then
+    answer=$(llm -m $MODEL -s "$system_prompt" "$prompt" -o temperature 0)
+fi
 echo "API call finished"
 
 thinking=$(awk '

@@ -13,6 +13,7 @@ Dead simple zsh script to use an LLM to write your commit messages
 - Ability to add extra context to AI prompt
 - Displays AI's reasoning process
 - Failsafe: automatically crash if has more than 100_000 characters
+- Multiple backend: call either using openai (faster) or using [llm](https://github.com/simonw/llm/) (more extensible and supports many providers)
 
 ## How to
 1. `git clone https://github.com/thiswillbeyourgithub/SimpleAICcommits`.
