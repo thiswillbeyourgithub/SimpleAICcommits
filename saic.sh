@@ -256,6 +256,7 @@ then
 elif [[ $UI == "fzf" ]]
 then
     choice=$(echo $suggestions | fzf \
+        --header="Choose commmit name (e to edit)" \
         --layout=reverse \
         --border \
         --preview 'echo {}' \
