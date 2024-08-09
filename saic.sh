@@ -19,7 +19,7 @@ PATCH="1"
 DO_RESET="1"
 PREV_COMMIT="1"
 PREFIX="SAIC: "
-VERSION="2.2"
+VERSION="2.3"
 BACKEND="openai"
 
 # hardcoded value
