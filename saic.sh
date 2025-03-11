@@ -158,7 +158,7 @@ done
 # get the previous git commits
 if [[ "$PREV_COMMIT" != "0" ]]
 then
-    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\" | sed 's/\"//g' | sed \"s/^$PREFIX//g\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
+    prev_commits="<previous_commit_messages>\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\" | sed 's/\"//g' | sed \"s/^$PREFIX//g\")\n</previous_commit_messages>\n\n"
 else
     prev_commits=""
 fi
@@ -195,7 +195,7 @@ then
     echo "Empty git diff (--cached or not)"
     exit 1
 else
-    diff="## BEGINNING OF GIT DIFF ##\n$diff\n## END OF GIT DIFF ##\n\n"
+    diff="<git_diff>\n$diff\n</git_diff>\n\n"
     log "$diff"
 fi
 
@@ -231,7 +231,7 @@ think=$(awk '
     BEGIN { RS="</think>"; FS="<think>" }
     NF>1 { gsub(/^[ \\t]*\\n/, "", $2); gsub(/\\n[ \\t]*$/, "", $2); print $2 }
 ' <<< "$answer" | awk NF)
-echo "\n\n## Reasonning of $MODEL ##:\n$think\n\n"
+echo "\n\n<model_reasonning>Model: $MODEL\n$think\n</model_reasonning>\n\n"
 
 answer=$(awk '
     BEGIN { RS="</answer>"; FS="<answer>" }
