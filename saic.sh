@@ -12,7 +12,7 @@ function log() {
 VERBOSE=0
 NUMBER=10
 OUT="commit"
-MODEL="gpt-4o-mini"
+MODEL="openrouter/google/gemini-2.0-flash-lite-001"
 UI="fzf"
 EXTRA=""
 PATCH="1"
@@ -39,7 +39,7 @@ usage="
 
 --output='commit'           'print' to populate your next prompt with the git message or 'commit' to commit directly.
 
---model='gpt-4o-mini'
+--model='openrouter/google/gemini-2.0-flash-lite-001'
 
 --backend='openai'          either 'openai' (faster) or 'llm' (more extensible, supports any provider)
 
