@@ -20,7 +20,7 @@ DO_RESET="1"
 PREV_COMMIT="1"
 PREFIX="SAIC: "
 VERSION="2.3"
-BACKEND="openai"
+BACKEND="llm"
 
 # hardcoded value
 MAX_STRING_LENGTH=100000
@@ -41,7 +41,7 @@ usage="
 
 --model='openrouter/google/gemini-2.0-flash-lite-001'
 
---backend='openai'          either 'openai' (faster) or 'llm' (more extensible, supports any provider)
+--backend='llm'          either 'openai' (faster) or 'llm' (more extensible, supports any provider)
 
 --UI='fzf'                  can be 'fzf', 'select' or 'dialog'
 
