@@ -158,7 +158,7 @@ done
 # get the previous git commits
 if [[ "$PREV_COMMIT" != "0" ]]
 then
-    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
+    prev_commits="## NAMES OF PREVIOUS COMMITS ##\n$(git --no-pager log -n 10 --no-color --pretty=format:\"%s\" | sed 's/\"//g' | sed \"s/^$PREFIX//g\")\n## END OF NAMES OF PREVIOUS COMMITS ##\n\n"
 else
     prev_commits=""
 fi
