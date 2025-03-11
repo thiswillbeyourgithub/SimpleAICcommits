@@ -54,13 +54,13 @@ usage="
 
 system_prompt="You are SAIC (Simple AI Commit), my best developper. Your task is: given an output of 'git diff', you must reply $NUMBER suggestions of commit messages that follow the conventionnal commits format.
 Your message format should be: '<type>(scope): <description>'
-BEFORE answering, you can use a <thinking> tag for yourself, THEN take a deep breath, THEN finally answer wrapping all your suggestions in a single <answer> tag that ends with </answer>.
+BEFORE answering, you can use a <think> tag for yourself, THEN take a deep breath, THEN finally answer wrapping all your suggestions in a single <answer> tag that ends with </answer>.
 Do not forget to separate each suggestion by a newline, they will be used to parse your suggestions.$EXTRA
 
 Examples of appropriate suggestion format:
-<thinking>
+<think>
 This is an example of your reasonning.
-</thinking>
+</think>
 <answer>
 fix(authentication): add password regex pattern
 feat(storage): add new test cases
@@ -227,11 +227,11 @@ then
 fi
 echo "API call finished"
 
-thinking=$(awk '
-    BEGIN { RS="</thinking>"; FS="<thinking>" }
+think=$(awk '
+    BEGIN { RS="</think>"; FS="<think>" }
     NF>1 { gsub(/^[ \\t]*\\n/, "", $2); gsub(/\\n[ \\t]*$/, "", $2); print $2 }
 ' <<< "$answer" | awk NF)
-echo "\n\n## Reasonning of $MODEL ##:\n$thinking\n\n"
+echo "\n\n## Reasonning of $MODEL ##:\n$think\n\n"
 
 answer=$(awk '
     BEGIN { RS="</answer>"; FS="<answer>" }
